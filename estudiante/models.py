@@ -1,5 +1,6 @@
 from django.db import models
 from contrato.models import Sede,Estudiante,Profesor,Nivel
+from perfil.models import Perfil
 # Create your models here.
 
 class Taller(models.Model):
@@ -70,13 +71,12 @@ class Academic_Rank(models.Model):
         (R, 'Repeat'),
         (CONT, 'Continue'),
     )
-    estudiante = models.ForeignKey(Estudiante)
+    perfil = models.ForeignKey(Perfil)
     fecha = models.DateField()
     hora = models.TimeField()
     nota = models.CharField(max_length=15,
                                       choices=ACADEMIC_RANK_CHOICES,
                                       default=G)
-    nivel = models.ForeignKey(Nivel)
     comentarios = models.CharField(max_length=35, blank=True)
     firma_alumno = models.BooleanField()
     profesor = models.ForeignKey(Profesor)

@@ -2,13 +2,6 @@ from django.contrib import admin
 from models import Taller,Curso,Seguimiento,Estado,TallerGeneral,Academic_Rank,Limitaciones
 # Register your models here.
 
-class Academic_RankAdmin(admin.ModelAdmin):
-   	list_display = ('estudiante', 'fecha','hora','nota','nivel','firma_alumno','profesor',)
-   	list_editable = ('nota','nivel','firma_alumno','profesor',)
-   	ordering = ('-fecha',)
-   	raw_id_fields = ('estudiante','profesor','nivel')	
-
-
 
 class TallerAdmin(admin.ModelAdmin):
 	list_display = ('tema','fecha','hora_inicio','hora_fin','capacidad','profesor','lugar','nivel',)
@@ -32,7 +25,7 @@ class SeguimientoAdmin(admin.ModelAdmin):
  	raw_id_fields = ('estudiante',)
 
 
-admin.site.register(Academic_Rank,Academic_RankAdmin)
+admin.site.register(Academic_Rank)
 admin.site.register(Taller,TallerAdmin)
 admin.site.register(TallerGeneral,TallerGAdmin)
 admin.site.register(Curso,CursoAdmin)
