@@ -1,0 +1,206 @@
+{% extends 'account.html' %}
+
+{% block contenido %}
+    <div class="row">
+        <div class="col-md-4">
+          <div class="cir">
+            <div class="tex">
+              <center><a data-toggle="modal" data-target="#myModal"><i class="fa fa-university fa-3x"></i><br>Cursos</a></center>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="cir">
+            <div class="tex">
+              <center><a data-toggle="modal" data-target="#myModa2"><i class="fa fa-street-view fa-3x"></i><br>Talleres</a></center>
+            </div>
+          </div>
+        </div>
+        <div class="col-md-4">
+          <div class="cir">
+            <div class="tex">
+              <center><a data-toggle="modal" data-target="#myModa3"><i class="fa fa-users fa-3x"></i><br>Talleres Generales</a></center>
+            </div>
+          </div>
+        </div>
+    </div>
+
+
+  <!-- Modal1-->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+        <div class="row">
+        <div class="col-xs-4 col-md-10">
+            <center><a class="btn btn-warning btn-lg" role="button" data-toggle="collapse" href="#horarios" aria-expanded="false" aria-controls="collapseExample">Reservaciones de Horarios</a></center>
+            <div class="collapse" id="horarios">
+                <div class="well">
+                 <form  class="form-inline" action="/reserva-curso/" method="POST">
+                 {% csrf_token %}
+                    <div class="row">
+                        <div class="col-xs-6">
+                            <p>Horario</p>
+                            <select class="form-control" name="cursos">
+                              <option value="Z">Seleccione Horario</option>
+                                      {% for curso in cursos %}
+                                      <option value="{{ curso.id }}"> Fecha: {{curso.fecha}} -- Hora: {{curso.hora_inicio}}-- a --{{curso.hora_fin}}</option>
+                                        {% endfor %}
+                            </select>
+                        </div>
+                    </div><br><br>
+                        {{ state }}
+				{% if latacunga %}
+                     <center><input class="btn btn-warning btn-md" type="submit" value="Reservar"></center>
+	{% endif %}                 
+ </form>
+                </div>
+            </div>
+        </div>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!-- Modal2-->
+<div class="modal fade" id="myModa2" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+           <div class="row">
+        <div class="col-xs-4 col-md-10">
+            <center><a class="btn btn-danger btn-lg" role="button" data-toggle="collapse" href="#talleres" aria-expanded="false" aria-controls="collapseExample">Reservaciones de Talleres</a></center>
+            <div class="collapse" id="talleres">
+                <div class="well">
+                  <form  class="form-inline" action="/reserva-taller/" method="POST">
+                   <input type="hidden" name="form-type" value="taller-form" />
+                  {% csrf_token %}
+                    <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>Taller de: </p>
+                            <select class="form-control" name="talleres" id="slt_taller">
+                                     <option value="Z">Seleccione un taller</option>
+                                      {% for taller in talleres %}
+                                      <option value="{{ taller.id}}">{{taller.tema}}</option>
+                                        {% endfor %}
+                             </select>
+                        </div>
+                        <div class="col-md-12" id="info">
+                        </div>
+                    </div><br><br>
+                </div>
+{% if latacunga1 %}
+                 <center> <input type="submit" class="btn btn-danger btn-md" value="Reservar"></center>
+{% endif %}                
+</form>
+            </div>
+            </div>
+        </div>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+ <!-- Modal3-->
+<div class="modal fade" id="myModa3" tabindex="-1" role="dialog" aria-labelledby="myModalLabel">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+      </div>
+      <div class="modal-body">
+            <div class="row">
+        <div class="col-xs-4 col-md-10">
+            <center><a class="btn btn-success btn-lg" role="button" data-toggle="collapse" href="#talleresg" aria-expanded="false" aria-controls="collapseExample">Reservaciones de Talleres Generales</a></center>
+            <div class="collapse" id="talleresg">
+                <div class="well">
+                  <form  class="form-inline" action="/reserva-tallerg/" method="POST">
+                   <input type="hidden" name="form-type" value="taller-form" />
+                  {% csrf_token %}
+                    <div class="form-group">
+                    <div class="row">
+                        <div class="col-md-6">
+                            <p>Taller de: </p>
+                            <select class="form-control" name="talleresg" id="slt_taller">
+                                     <option value="Z">Seleccione un taller general</option>
+                                      {% for taller in talleresg %}
+                                      <option value="{{ taller.id}}">{{taller.tema}}</option>
+                                        {% endfor %}
+                             </select>
+
+                        </div>
+
+                        <div class="col-md-6" id="info">
+
+                        </div>
+                    </div><br><br>
+                </div>
+{% if latacunga2 %}
+                  <center><input type="submit" class="btn btn-success btn-md" value="Reservar"></center>
+{% endif %}
+                </form>
+            </div>
+            </div>
+        </div>
+    </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+
+    {% block js %}
+<script>
+
+  $(document).ready(function(){
+
+    $('select[name=talleres]').change(function(){
+        var id = $(this).val();
+
+
+ $.ajax({
+        url : '/info_ajax/', // the endpoint,commonly same url
+        type : "GET", // http method
+        data : {
+        'id' : id,},
+        success : function(json) {
+        console.log(json); // another sanity check
+        var html = "";
+        for(var i = 0;i<json.length;i++){
+        html+='<ul><li> Fecha: '+json[i].fields.fecha+'</li><li> Capacidad: '+
+        json[i].fields.capacidad+'</li></ul>';
+      }
+// + ' <a class="btn btn-primary btn-md" href=http://127.0.0.1:8000/taller/' +json[i].pk+ '>Reservar</a>'
+        $('#info').html(html);
+ },
+
+ // handle a non-successful response
+ error : function(xhr,errmsg,err) {
+ console.log(xhr.status + ": " + xhr.responseText); // provide a bit more info about the error to the console
+ }
+ });
+
+
+
+            });
+
+        });
+
+
+
+
+</script>
+        {% endblock %}
+{% endblock %}
+
