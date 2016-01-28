@@ -43,6 +43,7 @@ INSTALLED_APPS = (
     'djcelery',
     'contrato',
     'estudiante',
+    'perfil',
 )
 
 MIDDLEWARE_CLASSES = (
