@@ -15,8 +15,9 @@ class Migration(migrations.Migration):
             name='Perfil',
             fields=[
                 ('id', models.AutoField(verbose_name='ID', serialize=False, auto_created=True, primary_key=True)),
-                ('estudiante', models.ForeignKey(to='contrato.Estudiante')),
+                ('ape', models.CharField(max_length=2)),
                 ('nivel', models.ForeignKey(to='contrato.Nivel')),
+                ('usuario', models.ForeignKey(to='contrato.Estudiante')),
             ],
         ),
     ]

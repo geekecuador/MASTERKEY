@@ -2,6 +2,8 @@ from django.contrib import admin
 from models import Contrato,Ciudad,Sede,Estudiante,Programa,Nivel,Profesor
 
 
+
+
 class SedeAdmin(admin.ModelAdmin):
   list_display = ('nombre_sede','ciudad','direccion','telefono','hora_inicio','hora_fin')
 

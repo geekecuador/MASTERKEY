@@ -38,6 +38,7 @@ class Nivel(models.Model):
     def __unicode__(self):
         return self.nivel +" "+str(self.leccion)+"--"+self.tema
 
+
 class Estudiante(models.Model):
 
     cedula = models.CharField(u"cedula", max_length=11, primary_key=True)

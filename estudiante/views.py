@@ -166,6 +166,7 @@ def reserva(request):
 @login_required
 def reservar_curso(request):
     estadocurso = False
+    fatq = False
     if request.method == 'POST':
         user = request.user.id
         usuario = User.objects.get(id=user)

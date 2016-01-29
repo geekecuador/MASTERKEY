@@ -24,8 +24,11 @@ class SeguimientoAdmin(admin.ModelAdmin):
  	list_editable = ('estado',)
  	raw_id_fields = ('estudiante',)
 
+class Academic_RankAdmin(admin.ModelAdmin):
+ 	list_display = ('perfil','nivel','fecha','hora','nota','comentarios','firma_alumno','profesor',)
+ 	raw_id_fields = ('nivel',)
 
-admin.site.register(Academic_Rank)
+admin.site.register(Academic_Rank,Academic_RankAdmin)
 admin.site.register(Taller,TallerAdmin)
 admin.site.register(TallerGeneral,TallerGAdmin)
 admin.site.register(Curso,CursoAdmin)
