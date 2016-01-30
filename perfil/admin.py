@@ -10,8 +10,9 @@ class Academic_RankInline(admin.StackedInline):
 
 
 class PerfilAdmin(admin.ModelAdmin):
+
   		list_display = ('usuario','nivel')
-  		raw_id_fields = ('usuario','nivel',)
+  		raw_id_fields = ('usuario',)
   		search_fields = ('usuario',)
   		inlines =  [Academic_RankInline,]
 
