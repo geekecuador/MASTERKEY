@@ -1,6 +1,5 @@
 from django.db import models
 from contrato.models import Sede,Estudiante,Profesor,Nivel
-from perfil.models import Perfil
 
 # Create your models here.
 
@@ -44,7 +43,7 @@ class Curso(models.Model):
     capacidad_maxima = models.PositiveSmallIntegerField(default=6)
     sede = models.ForeignKey(Sede)
     profesor =  models.ForeignKey(Profesor)
-    estudiantes  =  models.ManyToManyField(Perfil,blank=True)
+    estudiantes  =  models.ManyToManyField(Estudiante,blank=True)
     tipo_nivel  = models.CharField(max_length='2',default='xx')
     tipo_leccion = models.PositiveSmallIntegerField(default=0)
     max_tipo = models.PositiveSmallIntegerField(default=3)
@@ -72,7 +71,7 @@ class Academic_Rank(models.Model):
         (R, 'Repeat'),
         (CONT, 'Continue'),
     )
-    perfil = models.ForeignKey(Perfil)
+    estudiante = models.ForeignKey(Estudiante)
     nivel = models.ForeignKey(Nivel)
     fecha = models.DateField()
     hora = models.TimeField()

@@ -43,7 +43,7 @@ INSTALLED_APPS = (
     'djcelery',
     'contrato',
     'estudiante',
-    'perfil',
+
  
 )
 

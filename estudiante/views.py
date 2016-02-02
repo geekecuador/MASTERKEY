@@ -9,7 +9,6 @@ from django.http import HttpResponseRedirect
 from itertools import islice, chain
 from estudiante.models import Taller,Curso,TallerGeneral,Academic_Rank,Limitaciones
 from contrato.models import Estudiante
-from perfil.models import Perfil
 from django.contrib.auth.decorators import login_required
 from datetime import date, datetime, timedelta
 
@@ -342,11 +341,6 @@ def academic_rank(request):
 
 
 
-def academic_rank2(request):
-
-    perfil = Perfil.objects.all()
-
-    return render(request,'rank2.html',{'perfil':perfil})
 
 
     

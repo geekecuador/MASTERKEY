@@ -35,7 +35,6 @@ urlpatterns = [
     url(r'^reserva-tallerg/$', views.reservaTaller),
     url(r'^reserva-curso/$', views.reservar_curso),
     url(r'^academic/$', views.academic_rank),
-    url(r'^academic2/$', views.academic_rank2),
     url(r'^cuenta/$', views.cuenta),
     
 

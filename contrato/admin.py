@@ -1,5 +1,6 @@
 from django.contrib import admin
 from models import Contrato,Ciudad,Sede,Estudiante,Programa,Nivel,Profesor
+from estudiante.models import Academic_Rank
 
 
 
@@ -15,12 +16,19 @@ class NivelAdmin(admin.ModelAdmin):
   ordering = ('leccion',)
   search_fields = ('tema',)
 
+class Academic_RankInline(admin.TabularInline):
+  model = Academic_Rank
+  fk_name = "estudiante"
+  extra = 1
+
+
 class EstudianteAdmin(admin.ModelAdmin):
-  list_display = ('usuario','contrasena','cedula','nombre','apellido','telefono','programa','sede','nivel','fecha_de_inicio','fecha_de_expiracion')
+  list_display = ('usuario','contrasena','nombre','apellido','telefono','sede','nivel','fecha_de_inicio','fecha_de_expiracion')
   list_filter = ('sede','nivel')
   list_editable = ('nivel',)
   search_fields = ('cedula','nombre','apellido',)
   raw_id_fields = ('usuario','nivel')
+  inlines =  [Academic_RankInline,]
         
 class ContratoAdmin(admin.ModelAdmin) :
   list_display = ('numero_contrato','numero_factura','nombre','apellidos','cedula','email','telefono','celular','fecha_creacion','duracion','sede_firma_contrato')

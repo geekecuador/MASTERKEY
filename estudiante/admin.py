@@ -25,7 +25,7 @@ class SeguimientoAdmin(admin.ModelAdmin):
  	raw_id_fields = ('estudiante',)
 
 class Academic_RankAdmin(admin.ModelAdmin):
- 	list_display = ('perfil','nivel','fecha','hora','nota','comentarios','firma_alumno','profesor',)
+ 	list_display = ('estudiante','nivel','fecha','hora','nota','comentarios','firma_alumno','profesor',)
  	raw_id_fields = ('nivel',)
 
 admin.site.register(Academic_Rank,Academic_RankAdmin)
