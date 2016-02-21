@@ -99,6 +99,26 @@ class Seguimiento(models.Model):
 
 
 
+class Seguimiento_Estudiante(models.Model):
+    estudiante = models.ForeignKey(Estudiante, related_name='seguimiento_estudiante')
+
+
+    def __unicode__(self):
+        return "%s" % (self.estudiante,)
+
+
+class S_comentarios(models.Model):
+    estudiante =  models.ForeignKey(Seguimiento_Estudiante)
+    comentario = models.TextField()
+    estado = models.ForeignKey(Estado)
+
+    def __unicode__(self):
+        return "%s-  %s" % (self.comentario,self.estado)
+
+
+
+
+
 class Limitaciones(models.Model):
     estudiante = models.ForeignKey(Estudiante)
     fecha_reserva = models.DateField()
