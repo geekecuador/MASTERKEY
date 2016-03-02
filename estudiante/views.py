@@ -35,6 +35,7 @@ def cursos(usuario):
                         filter(tipo_nivel=usuario.estudiante.nivel.nivel).filter(sede=usuario.estudiante.sede).exclude(tipo_nivel='xx')
     cursos2 = Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).\
                         filter(tipo_nivel='xx').filter(sede=usuario.estudiante.sede)
+    cursos0 = Curso.objects.filter(estudiantes=usuario.estudiante)
     cursos = list(chain(cursos1,cursos2))
     return cursos
 
