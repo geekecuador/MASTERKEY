@@ -11,8 +11,9 @@ https://docs.djangoproject.com/en/1.8/ref/settings/
 """
 
 # Build paths inside the project like this: os.path.join(BASE_DIR, ...)
+from unipath import Path
+from django.core.urlresolvers import reverse_lazy
 import os
-
 BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 
@@ -25,7 +26,7 @@ SECRET_KEY = '#qlvwsx*i*j3=u36w6+%9)(4qw93qhz(-d_lk_er^1er2yx0(0'
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-from unipath import Path
+
 RUTA_PROYECTO = Path(__file__).ancestor(2)
 
 ALLOWED_HOSTS = []
@@ -40,9 +41,9 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.messages',
     'django.contrib.staticfiles',
-    'djcelery',
     'contrato',
     'estudiante',
+    'daterange_filter',
 
  
 )
@@ -76,7 +77,6 @@ TEMPLATES = [
                 'django.contrib.messages.context_processors.messages',
                 'django.template.context_processors.static',
                 'django.template.context_processors.media',
-
             ],
         },
     },
@@ -95,7 +95,6 @@ DATABASES = {
     }
 }
 
-from django.core.urlresolvers import reverse_lazy
 LOGIN_URL = reverse_lazy('login')
 LOGIN_REDIRECT_URL = reverse_lazy('login')
 LOGOUT_URL = reverse_lazy('logout')

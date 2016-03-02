@@ -11,11 +11,35 @@ from estudiante.models import Taller,Curso,TallerGeneral,Academic_Rank,Limitacio
 from contrato.models import Estudiante
 from django.contrib.auth.decorators import login_required
 from datetime import date, datetime, timedelta
+from django.db.models import Q
 
 # Create your views here.
+
+def talleres(usuario):
+    startdate = date.today()+ timedelta(days=1)
+    enddate = startdate + timedelta(days=1)
+    talleres = Taller.objects.filter(nivel=usuario.estudiante.nivel.nivel).filter(fecha__range=[startdate, enddate]).filter(capacidad__gt=0).filter(lugar=usuario.estudiante.sede)
+    return talleres
+
+def talleres_generales(usuario):
+    startdate = date.today()+ timedelta(days=1)
+    enddate = startdate + timedelta(days=1)
+    talleresg = TallerGeneral.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad__gt=0).filter(lugar=usuario.estudiante.sede)
+    return talleresg
+
+def cursos(usuario):
+    startdate = date.today()+ timedelta(days=1)
+    enddate = startdate + timedelta(days=1)
+    cursos1 = Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).\
+                        filter(tipo_leccion__in=range(usuario.estudiante.nivel.leccion-10,usuario.estudiante.nivel.leccion+11)).\
+                        filter(tipo_nivel=usuario.estudiante.nivel.nivel).filter(sede=usuario.estudiante.sede).exclude(tipo_nivel='xx')
+    cursos2 = Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).\
+                        filter(tipo_nivel='xx').filter(sede=usuario.estudiante.sede)
+    cursos = list(chain(cursos1,cursos2))
+    return cursos
+
 def login_user(request):
     state = "Por favor ingrese a continuacion"
-    username = password = ''
     if request.POST:
         username = request.POST.get('username')
         password = request.POST.get('password')
@@ -38,17 +62,10 @@ def login_user(request):
                 talleres = []
 		latacunga = False
                 if Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).count() > 0 :
-                    cursos1 = Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).\
-                        filter(tipo_leccion__in=range(usuario.estudiante.nivel.leccion-10,usuario.estudiante.nivel.leccion+11)).\
-                        filter(tipo_nivel=usuario.estudiante.nivel.nivel).filter(sede=usuario.estudiante.sede).exclude(tipo_nivel='xx')
-                    cursos2 = Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).\
-                        filter(tipo_nivel='xx').filter(sede=usuario.estudiante.sede)
-                    cursos = list(chain(cursos1,cursos2))
-                    print cursos
+                    cursos = cursos(usuario)
 		    latacunga = True
-		talleres = Taller.objects.filter(nivel=usuario.estudiante.nivel.nivel).filter(fecha__range=[startdate, enddate]).filter(capacidad__gt=0).filter(lugar=usuario.estudiante.sede)
-                talleresg = TallerGeneral.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad__gt=0).filter(lugar=usuario.estudiante.sede)
-                print talleres
+                talleres = talleres(usuario)
+                talleresg = talleres_generales(usuario)
 		latacunga1 = False
 		latacunga2 = False
 		if talleres.count() > 0:
@@ -56,14 +73,20 @@ def login_user(request):
 		if talleresg.count() > 0:
 		    latacunga2 = True
                 # .filter(hora_inicio__gt=time.strftime("%H:%M:%S"))
-                return render(request,'contenido.html',{'latacunga':latacunga,'latacunga1':latacunga1,'latacunga2':latacunga2,'username':username,'fecha':fecha,'duracion':duracion,'fotourl':fotourl,'cedula':cedula,'telefono':telefono,'programa':programa,'talleres':talleres,'talleresg':talleresg,'cursos':cursos,'nivel':nivel})
+                return render(request,'contenido.html',{'latacunga': latacunga, 'latacunga1': latacunga1,
+                                                        'latacunga2': latacunga2, 'username': username, 'fecha': fecha,
+                                                        'duracion': duracion, 'fotourl': fotourl, 'cedula': cedula,
+                                                        'telefono': telefono, 'programa': programa,
+                                                        'talleres': talleres, 'talleresg': talleresg, 'cursos': cursos,
+                                                        'nivel': nivel})
             else:
                 state = "Tu cuenta esta desactivada por favor acercarce a oficinas."
         else:
             state = "Usuario o contrasena incorrecta"
 
     return render(request,'signin.html',{'state':state}, context_instance=RequestContext(request))
-@login_required
+
+@login_required(login_url='/')
 def cuenta(request):
     state = "Conectado con exito"
     user = request.user.id
@@ -84,12 +107,7 @@ def cuenta(request):
     talleres = []
     latacunga  = False
     if Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).count() > 0 :
-        cursos1 = Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).\
-        filter(tipo_leccion__in=range(usuario.estudiante.nivel.leccion-10,usuario.estudiante.nivel.leccion+11)).\
-        filter(tipo_nivel=usuario.estudiante.nivel.nivel).filter(sede=usuario.estudiante.sede)
-        cursos2 = Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).\
-                    filter(tipo_nivel='xx').filter(sede=usuario.estudiante.sede)
-        cursos = list(chain(cursos1,cursos2))
+        cursos = cursos(usuario)
         print cursos
 	latacunga = True
     talleresg = TallerGeneral.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad__gt=0).filter(lugar=usuario.estudiante.sede)
@@ -113,7 +131,7 @@ class Busqueda_info_ajax(TemplateView):
         print data
         return HttpResponse(data, content_type="application/json")
 
-@login_required
+@login_required(login_url='/')
 def reserva(request):
     estadot = False
     if request.method == 'POST':
@@ -133,17 +151,10 @@ def reserva(request):
 	latacunga  = False
         taller = request.POST.get('talleres')
         taller_actualizar = Taller.objects.get(pk=taller)
-        if Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).count() > 0 :
-            cursos1 = Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).\
-                        filter(tipo_leccion__in=range(usuario.estudiante.nivel.leccion-10,usuario.estudiante.nivel.leccion+11)).\
-                        filter(tipo_nivel=usuario.estudiante.nivel.nivel).filter(sede=usuario.estudiante.sede)
-            cursos2 = Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).\
-                        filter(tipo_nivel='xx').filter(sede=usuario.estudiante.sede)
-            cursos = list(chain(cursos1,cursos2))
-            print cursos
+        if Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).count() > 0:
+            cursos = cursos(usuario)
 	    latacunga = True
         talleres = Taller.objects.filter(nivel=usuario.estudiante.nivel.nivel).filter(fecha__range=[startdate, enddate]).filter(capacidad__gt=0).filter(lugar=usuario.estudiante.sede)
-        print talleres
         talleresg = TallerGeneral.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad__gt=0).filter(lugar=usuario.estudiante.sede)
 	latacunga1 = False
         latacunga2 = False
@@ -163,7 +174,7 @@ def reserva(request):
         return render(request,'contenido.html',{'latacunga':latacunga,'latacunga1':latacunga1,'latacunga2':latacunga2,'estadot':estadot})
 
 
-@login_required
+@login_required(login_url='/')
 def reservar_curso(request):
     estadocurso = False
     fatq = False
@@ -214,6 +225,7 @@ def reservar_curso(request):
                         filter(tipo_nivel=usuario.estudiante.nivel.nivel).filter(sede=usuario.estudiante.sede)
             cursos2 = Curso.objects.filter(fecha__range=[startdate, enddate]).filter(capacidad_maxima__gt=0).\
                         filter(tipo_nivel='xx').filter(sede=usuario.estudiante.sede)
+
             cursos = list(chain(cursos1,cursos2))
             print cursos
 	    latacunga = True
@@ -256,7 +268,7 @@ def reservar_curso(request):
         return render(request,'contenido.html',{'latacunga':latacunga,'latacunga1':latacunga1,'latacunga2':latacunga2,'estadocurso':estadocurso})
 
 
-@login_required
+@login_required(login_url='/')
 def reservaTaller(request):
     estadoTaller = False
     if request.method == 'POST':
@@ -306,7 +318,6 @@ def reservaTaller(request):
         return render(request,'contenido.html',{'latacunga':latacunga,'latacunga1':latacunga1,'latacunga2':latacunga2,'estadoTaller':estadoTaller})
 
 
-
 def update(request, pullo):
     if request.method == 'POST':
         user = request.user.id
@@ -317,7 +328,7 @@ def update(request, pullo):
     else:
 
         return render_to_response('account.html')
-@login_required
+@login_required(login_url='/')
 def academic_rank(request):
     user = request.user.id
     usuario = User.objects.get(id=user)
@@ -338,9 +349,3 @@ def academic_rank(request):
         return  render(request,'rank.html',{'academic':academic,'username':request.user,'duracion':estudiante.fecha_de_expiracion,'fotourl':estudiante.foto.url,'cedula':estudiante.cedula,'telefono':estudiante.telefono,'programa':estudiante.programa,'nivel':nivel})
     else:
         return render(request,'rank.html',{'academic':academic,'username':request.user,'fecha':fecha,'duracion':duracion,'fotourl':fotourl,'cedula':cedula,'telefono':telefono,'programa':programa,'nivel':nivel}, context_instance=RequestContext(request))
-
-
-
-
-
-    

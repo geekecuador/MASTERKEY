@@ -1,6 +1,7 @@
 from django.contrib import admin
 from models import Contrato,Ciudad,Sede,Estudiante,Programa,Nivel,Profesor
 from estudiante.models import Academic_Rank
+from daterange_filter.filter import DateRangeFilter
 
 
 
@@ -32,7 +33,7 @@ class EstudianteAdmin(admin.ModelAdmin):
         
 class ContratoAdmin(admin.ModelAdmin) :
   list_display = ('numero_contrato','numero_factura','nombre','apellidos','cedula','email','telefono','celular','fecha_creacion','duracion','sede_firma_contrato')
-  list_filter = ('sede_firma_contrato',)
+  list_filter = ('sede_firma_contrato',('fecha_creacion', DateRangeFilter),)
   search_fields = ('numero_contrato','nombre','apellidos',)
   filter_horizontal = ('beneficiarios',)
 
